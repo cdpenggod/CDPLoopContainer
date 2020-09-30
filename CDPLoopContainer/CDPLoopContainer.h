@@ -78,6 +78,9 @@ typedef enum {
 /// 仅重置各参数为 默认值, 如 count 为 1, currentIndex 为 0 等等, 初始化已创建的循环 view 不会重新创建
 - (void)reset;
 
+/// 立刻循环一次 (调用后立刻开始下次循环, 不会更改当前 已开始 或 已停止 循环状态)
+- (void)loopOnce;
+
 @end
 
 
