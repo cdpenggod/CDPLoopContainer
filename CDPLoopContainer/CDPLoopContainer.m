@@ -81,7 +81,7 @@ typedef enum {
 - (void)start {
     //判断是否已开始
     if (!self.haveStart) {
-        [self doLoop];
+        [self doLoop:NO];
     }
 }
 //停止循环
@@ -106,8 +106,12 @@ typedef enum {
     //初始未循环过,用 -1 方便后续判断
     self.showViewIndex = -1;
 }
+//立刻循环一次
+- (void)loopOnce {
+    [self doLoop:YES];
+}
 #pragma mark - 循环
-- (void)doLoop {
+- (void)doLoop:(BOOL)isOnce {
     if (self.viewArr && self.viewArr.count > 0) {
         
         //是否第一次循环
@@ -139,7 +143,9 @@ typedef enum {
         }
         
         //记录开始循环
-        self.haveStart = YES;
+        if (!isOnce) {
+            self.haveStart = YES;
+        }
         
         //即将出现的viewIndex
         NSInteger nextViewIndex = (isFrist || self.showViewIndex >= self.viewArr.count - 1)? 0 : self.showViewIndex + 1;
@@ -159,15 +165,17 @@ typedef enum {
         }
         
         //设置下次循环开始时间
-        [NSObject cancelPreviousPerformRequestsWithTarget:self];
-        [self performSelector:@selector(doLoop)
-                   withObject:nil
-                   afterDelay:self.showDuration + self.animatedDuration];
+        if (self.haveStart) {
+            [NSObject cancelPreviousPerformRequestsWithTarget:self];
+            [self performSelector:@selector(doLoop:)
+                       withObject:@(NO)
+                       afterDelay:self.showDuration + self.animatedDuration];
+        }
         
         //循环动画
         if (!isFrist) {
             UIView *currentView = self.viewArr[self.showViewIndex];
-            [UIView animateWithDuration:self.animatedDuration animations:^{
+            [UIView animateWithDuration:self.animatedDuration delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
                 currentView.frame = [self getViewFrameWithType:CDPLoopContainerViewFrameEndShow];
                 nextView.frame = [self getViewFrameWithType:CDPLoopContainerViewFrameShow];
             } completion:^(BOOL finished) {
