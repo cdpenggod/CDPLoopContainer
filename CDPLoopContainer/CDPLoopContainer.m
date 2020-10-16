@@ -175,7 +175,7 @@ typedef enum {
         //循环动画
         if (!isFrist) {
             UIView *currentView = self.viewArr[self.showViewIndex];
-            [UIView animateWithDuration:self.animatedDuration delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+            [UIView animateWithDuration:self.animatedDuration delay:0 options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionAllowUserInteraction animations:^{
                 currentView.frame = [self getViewFrameWithType:CDPLoopContainerViewFrameEndShow];
                 nextView.frame = [self getViewFrameWithType:CDPLoopContainerViewFrameShow];
             } completion:^(BOOL finished) {
