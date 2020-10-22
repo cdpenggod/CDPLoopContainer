@@ -179,7 +179,6 @@ typedef enum {
                 currentView.frame = [self getViewFrameWithType:CDPLoopContainerViewFrameEndShow];
                 nextView.frame = [self getViewFrameWithType:CDPLoopContainerViewFrameShow];
             } completion:^(BOOL finished) {
-                [currentView removeFromSuperview];
             }];
         }
         
