@@ -58,6 +58,11 @@ typedef enum {
 /// 当 count 数量为 1 时，是否显示 view 后停止循环 (默认 YES)
 @property (nonatomic, assign) BOOL stopWhenOneCount;
 
+/// 当父级viewController 或 父view 已销毁为nil时，自动停止循环，防止无法释放内存泄漏 (默认 YES)
+///
+/// 适用于父层级里存在viewController且中间没有被 removeFromSuperview 的情况
+@property (nonatomic, assign) BOOL stopWhenNotHaveSuper;
+
 /// 初始化-单一类型 view
 /// @param viewClass 循环的 view 类，内部会通过 init 初始化创建，并通过 delegate 回调
 /// @param count 循环展示的总数量 (推荐根据 数据量 传入, 回调时可根据 index 判断对应数据进行渲染)
@@ -71,7 +76,7 @@ typedef enum {
 /// 开始循环
 - (void)start;
 
-/// 停止循环
+/// 停止循环 (在父视图销毁前stop，否则可能一直在循环无法释放)
 - (void)stop;
 
 /// 重置为初始化状态 (最好在 停止循环时 使用)
