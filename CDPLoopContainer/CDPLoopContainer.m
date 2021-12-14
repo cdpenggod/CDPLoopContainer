@@ -115,7 +115,7 @@ typedef enum {
 - (void)doLoop:(BOOL)isOnce {
     //判断是否存在父级并自动停止循环
     BOOL canLoop = (self.stopWhenNotHaveSuper &&
-                    (self.yj_viewController == nil || self.superview == nil))? NO : YES;
+                    (self.cdp_viewController == nil || self.superview == nil))? NO : YES;
     
     if (self.viewArr && self.viewArr.count > 0 && canLoop) {
         
