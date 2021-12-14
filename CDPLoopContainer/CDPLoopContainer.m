@@ -94,7 +94,8 @@ typedef enum {
     self.paddingInsets = UIEdgeInsetsZero;
     self.direction = CDPLoopContainerDirectionUp;
     self.stopWhenOneCount = YES;
-    
+    self.stopWhenNotHaveSuper = YES;
+
     //时长
     self.animatedDuration = DefaultAnimatedDuration;
     self.showDuration = DefaultShowDuration;
@@ -112,7 +113,11 @@ typedef enum {
 }
 #pragma mark - 循环
 - (void)doLoop:(BOOL)isOnce {
-    if (self.viewArr && self.viewArr.count > 0) {
+    //判断是否存在父级并自动停止循环
+    BOOL canLoop = (self.stopWhenNotHaveSuper &&
+                    (self.yj_viewController == nil || self.superview == nil))? NO : YES;
+    
+    if (self.viewArr && self.viewArr.count > 0 && canLoop) {
         
         //是否第一次循环
         BOOL isFrist = (self.showViewIndex == -1)? YES : NO;
@@ -231,6 +236,16 @@ typedef enum {
         break;
     }
     return frame;
+}
+//获取当前所在vc
+- (UIViewController *)cdp_viewController {
+    for (UIView* next = [self superview]; next; next = next.superview) {
+        UIResponder *nextResponder = [next nextResponder];
+        if ([nextResponder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)nextResponder;
+        }
+    }
+    return nil;
 }
 #pragma mark - setter
 - (void)setAnimatedDuration:(CGFloat)animatedDuration {
