@@ -76,6 +76,19 @@ typedef enum {
 - (void)dealloc {
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
 }
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    //更新当前显示view的frame (主要兼容外部用自适应布局时，frame延迟，更新view的frame时本身frame还没有的情况)
+    if (self.showViewIndex >= 0 && self.showViewIndex < self.viewArr.count && !self.isScrolling) {
+        UIView *currentView = self.viewArr[self.showViewIndex];
+        CGFloat width = CGRectGetWidth(currentView.frame);
+        CGFloat height = CGRectGetHeight(currentView.frame);
+        if (width <= 0 || height <= 0) {
+            currentView.frame = [self getViewFrameWithType:YJLoopContainerViewFrameShow];
+        }
+    }
+}
 #pragma mark - 交互
 //开始循环
 - (void)start {
